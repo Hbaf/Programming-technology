@@ -145,7 +145,6 @@
 
 					contentType: 'application/json; charset=utf-8',
 					success: function (resultData) {
-						hideMsg();
 						current_round = resultData;
 						$('#pic img').attr('src', resultData['url'][0]);
 						var selector = document.getElementById('ans-input');
@@ -180,6 +179,7 @@
 			function check_answer(){
 				if (document.getElementById('ans-input').value == current_round['answer']) {
 					showMsg('Correct');
+					setTimeout(hideMsg, 1000);
 					new_round();
 				}else{
 					showMsg('Wrong');
