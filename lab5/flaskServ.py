@@ -89,7 +89,7 @@ def get_random_name(level):
 
 
 def get_random_photo(name):
-    return pictures[name][random.randint(0, 5)]
+    return pictures[name][random.randint(0, 10)]
 
 def requets_photos(name):
     loc_url = url + name.replace(' ', '+')
