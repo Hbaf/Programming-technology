@@ -54,7 +54,7 @@ def main_page():
 @app.route('/rest/<level>')
 def get_pic_url(level):
     answer = get_random_name(level)
-    # Yeah, i know that send answer to front is not good idea
+    # Yeah, i know that send answer to front is not a good idea
     response = {'url': [], 'name_var': [], 'answer': answer}
 
     if answer not in pictures:
@@ -93,10 +93,7 @@ def get_random_photo(name):
 
 def requets_photos(name):
     loc_url = url + name.replace(' ', '+')
-    soup = get_soup(loc_url)
+    soup = BeautifulSoup(urllib.request.urlopen(urllib.request.Request(loc_url, headers={'User-Agent': 'Mozilla/5.0'})), 'html.parser')
     result = {name: []}
     result[name].extend([a['src'] for a in soup.find_all("img", {"src": re.compile("(biographyonline.net|(gstatic|bloomberg|biography).com|wikipedia.org)")})])
     return result
-
-def get_soup(url):
-    return BeautifulSoup(urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})), 'html.parser')

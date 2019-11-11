@@ -41,7 +41,6 @@ def read_from_file(file):
 def mem_dict(text):
     dict = {}
     lst = text.split(' ')
-    first_word = lst[0]
     for i in range(len(lst) - 1):
         if lst[i] in dict:
             dict.get(lst[i]).add(lst[i+1])
@@ -52,14 +51,17 @@ def mem_dict(text):
         dict.get(lst[-1]).add(None)
     else:
         dict.update({lst[-1]: {None}})
+    lst = []
+    for i in dict.keys():
+        lst.append(i)
+    dict.update({'': lst})
 
-    return dict, first_word
+    return dict
 
 
-def dict_to_text(dict, first_word):
+def dict_to_text(dict):
     text = ''
-    text = first_word
-    current_word = list(dict[first_word])[random.randint(0, len(dict[first_word]) - 1)]
+    current_word = list(dict[''])[random.randint(0, len(dict['']) - 1)]
     while current_word is not None:
         text += ' ' + current_word
         prev_current_word = current_word
@@ -68,7 +70,7 @@ def dict_to_text(dict, first_word):
 
 
 def main():
-    print(dict_to_text(*mem_dict(read_from_file(open(sys.argv[1], 'r')))))
+    print(dict_to_text(mem_dict(read_from_file(open(sys.argv[1], 'r')))))
 
 
 if __name__ == '__main__':
