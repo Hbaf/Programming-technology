@@ -95,5 +95,5 @@ def requets_photos(name):
     loc_url = url + name.replace(' ', '+')
     soup = BeautifulSoup(urllib.request.urlopen(urllib.request.Request(loc_url, headers={'User-Agent': 'Mozilla/5.0'})), 'html.parser')
     result = {name: []}
-    result[name].extend([a['src'] for a in soup.find_all("img", {"src": re.compile("(biographyonline.net|(gstatic|bloomberg|biography).com|wikipedia.org)")})])
+    result[name].extend([a['src'] for a in soup.find_all("img", {"src": re.compile("gstatic.com")})])
     return result
