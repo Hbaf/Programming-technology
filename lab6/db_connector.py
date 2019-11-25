@@ -18,17 +18,17 @@ def init_db():
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
 
-    cursor.execute("CREATE TABLE FeedSource (feed_id int primary key, feed_name text, feed_title text, url text, img text, subtitle text, last_update text )")
+    cursor.execute("CREATE TABLE FeedSource (feed_name text, feed_title text, url text, img text, subtitle text, last_update text )")
     cursor.execute("CREATE TABLE Post (feed_id int, title text, link text, date text, author text, tags text, desc text, body text )")
 
     db.commit()
     db.close()
 
 
-def load_feed(feed_name):
+def load_feed(feed_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "SELECT url, last_update FROM FeedSource WHERE feed_name = '{}'".format(feed_name)
+    sql = "SELECT url, last_update FROM FeedSource WHERE feed_id = '{}'".format(feed_id)
     cursor.execute(sql)
     result = cursor.fetchone()
     db.close()
@@ -40,13 +40,13 @@ def load_feed(feed_name):
 
     # check if we already have relevant data
     if last_update < convert_date(new_last_update):
-        update_last_update_date(feed_name, new_last_update)
+        update_last_update_date(feed_id, new_last_update)
         return
 
     for item in result['entries']:
         if convert_date(item['published']) < last_update:
             break
-        add_post(feed_name,
+        add_post(feed_id,
                  item['title'] if 'title' in item else '',
                  item['id'] if 'id' in item else item['link'],
                  item['published'] if 'published' in item else '',
@@ -58,10 +58,10 @@ def load_feed(feed_name):
     return True
 
 
-def get_posts(feed_name):
+def get_posts(feed_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "SELECT * FROM Post WHERE feed_name = '{}'".format(feed_name)
+    sql = "SELECT * FROM Post WHERE feed_id = '{}'".format(feed_id)
     cursor.execute(sql)
     result = cursor.fetchall()
     db.close()
@@ -82,17 +82,17 @@ def add_feed(url):
             result['feed']['published'] if 'published' in result['feed'] else result['feed']['updated']
             )
 
+    feed_id = get_feed_id(url)
     # TODO rewrite mb?
     for item in result['entries']:
-        add_post(url,
-                 feed['title'],
+        add_post(feed_id,
                  item['title'] if 'title' in item else '',
                  item['id'] if 'id' in item else item['link'],
                  item['published'] if 'published' in item else '',
                  item['author'] if 'author' in item else '',
                  list(map(lambda x: x['term'], item['tags'] if 'tags' in item else [])),
-                 item['summary'].replace('\\\\n', '\\n') if 'summary' in item else '',
-                 item['content'][0]['value'].replace('\\\\n', '\\n') if 'content' in item and len(item) > 0 and 'value' in item['content'][0] else ''
+                 item['summary'] if 'summary' in item else '',
+                 item['content'][0]['value'] if 'content' in item and len(item) > 0 and 'value' in item['content'][0] else ''
                  )
     return True
 
@@ -100,35 +100,36 @@ def add_feed(url):
 def get_feed_id(url):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "SELECT feed_id FROM FeedSource WHERE url = {}".format(url)
-    print(sql)
+    sql = "SELECT rowid FROM FeedSource WHERE url = '{}'".format(url)
     cursor.execute(sql)
+    result = cursor.fetchone()
     db.close()
+    return result[0]
 
 
-def remove_feed(feed_name):
+def remove_feed(feed_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "DELETE FROM FeedSource WHERE feed_name = '{}'".format(feed_name)
+    sql = "DELETE FROM FeedSource WHERE feed_id = '{}'".format(feed_id)
     cursor.execute(sql)
     db.commit()
     db.close()
-    remove_posts_by_feed_name(feed_name)
+    remove_posts_by_feed_id(feed_id)
 
 
 def get_feeds():
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM FeedSource")
+    cursor.execute("SELECT rowid, * FROM FeedSource")
     result = cursor.fetchall()
     db.close()
     return result
 
 
-def update_last_update_date(feed_name, date):
+def update_last_update_date(feed_id, date):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    cursor.execute("UPDATE FeedSource SET last_update = '{}' WHERE feed_name = '{}'".format(date, feed_name))
+    cursor.execute("UPDATE FeedSource SET last_update = '{}' WHERE feed_id = '{}'".format(date, feed_id))
     db.commit()
     db.close()
 
@@ -147,10 +148,10 @@ def add_row(table, *values):
     db.close()
 
 
-def remove_posts_by_feed_name(feed_name):
+def remove_posts_by_feed_id(feed_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "DELETE FROM Post WHERE feed_name = '{}'".format(feed_name)
+    sql = "DELETE FROM Post WHERE feed_id = '{}'".format(feed_id)
     cursor.execute(sql)
     db.commit()
     db.close()
