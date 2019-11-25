@@ -17,5 +17,8 @@ Rss-каналы:
     https://www.hongkiat.com/blog/feed
     https://en.wikipedia.org/w/index.php?title=Special:NewPages&feed=rss
     https://habr.com/ru/rss/best/daily/?fl=ru
-
-    Fri, 08 Nov 2019 13:33:22 +0000
+    http://rss.cnn.com/rss/edition.rss
+    https://www.liga.net/tech/technology/rss.xml
+    https://www.liga.net/news/photo/rss.xml
+    https://www.liga.net/tech/gadgets/rss.xml
+    http://api.flickr.com/services/feeds/photos_public.gne?tags=<neon>,<city>
