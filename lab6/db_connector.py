@@ -28,7 +28,7 @@ def init_db():
 def load_feed(feed_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "SELECT url, last_update FROM FeedSource WHERE feed_id = '{}'".format(feed_id)
+    sql = "SELECT url, last_update FROM FeedSource WHERE rowid = '{}'".format(feed_id)
     cursor.execute(sql)
     result = cursor.fetchone()
     db.close()
@@ -104,13 +104,26 @@ def get_feed_id(url):
     cursor.execute(sql)
     result = cursor.fetchone()
     db.close()
-    return result[0]
+    if result == None:
+        return 0
+    else:
+        return result[0]
+
+
+def get_feed(id):
+    db = sqlite3.connect(DB_NAME)
+    cursor = db.cursor()
+    sql = "SELECT * FROM FeedSource WHERE rowid = '{}'".format(id)
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    db.close()
+    return result
 
 
 def remove_feed(feed_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "DELETE FROM FeedSource WHERE feed_id = '{}'".format(feed_id)
+    sql = "DELETE FROM FeedSource WHERE rowid = '{}'".format(feed_id)
     cursor.execute(sql)
     db.commit()
     db.close()
@@ -129,7 +142,7 @@ def get_feeds():
 def update_last_update_date(feed_id, date):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    cursor.execute("UPDATE FeedSource SET last_update = '{}' WHERE feed_id = '{}'".format(date, feed_id))
+    cursor.execute("UPDATE FeedSource SET last_update = '{}' WHERE rowid = '{}'".format(date, feed_id))
     db.commit()
     db.close()
 
@@ -151,10 +164,11 @@ def add_row(table, *values):
 def remove_posts_by_feed_id(feed_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "DELETE FROM Post WHERE feed_id = '{}'".format(feed_id)
+    sql = "DELETE FROM Post WHERE rowid = '{}'".format(feed_id)
     cursor.execute(sql)
     db.commit()
     db.close()
+
 
 def convert_date(date):
     if date == '':
@@ -190,6 +204,7 @@ def fill_DB():
     for feed in rss:
        print(add_feed(feed))
 
+# init_db()
 # fill_DB()
 #
 #     print(result['entries'][0])
