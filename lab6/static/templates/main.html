@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>My RSS reader</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}" />
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<div class="logo">RSS-Reader</div>
+								</header>
+
+							<!-- Content -->
+								<section id="banner">
+									<div class="content">
+										<header>
+											<h1>Hi, I’m RSSSR<br />
+											- the best RSS client</h1>
+										</header>
+										<p>Txt explaining why you definitely should (need to) use our RSS<br>L<br>i<br>k<br>e<br>a<br>l<br>o<br>t<br>o<br>f<br>t<br>e<br>x<br>t</p>
+										<ul class="actions">
+											<li><a href="#" class="inactive button big">Learn More</a></li>
+										</ul>
+									</div>
+									<span class="image object" style="flex-grow: 1">
+										<img style = "max-width: 100%" src="{{url_for('static',filename='img/koala.jpg')}}" alt="" />
+									</span>
+								</section>
+						</div>
+					</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+                            <section id="new-feed" class="alt">
+								<div class="row" style="align-items: center;  justify-content: flex-start; flex-basis: content">
+                                	<input class="col-9 col-12-medium" type="text" name="add feed" id="add-feed" placeholder="Add new feed" />
+									<button class="col-2 col-12-medium button primary icon solid fa-arrow-right" id="add-feed-button" onclick="add_feed()"></button>
+								</div>
+                            </section>
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Current feeds</h2>
+									</header>
+									<ul>
+                                        {% for feed in feeds %}
+										<li id="feed-{{feed[0]}}" class="row" style="align-items: center;">
+											<a class="col-9 col-12-large" href="/feed/{{feed[0]}}">{{feed[1]}}: {{feed[2]}}</a>
+											<button class="col-2 medium icon solid fa-trash" onclick="remove_feed.bind(this, {{feed[0]}})()"></button>
+										</li>
+                                        {% endfor %}
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+									<header class="major">
+										<h2>Get in touch</h2>
+									</header>
+									<p>We represent best RSS readers. Thank You!</p>
+									<p>If you want to contact us</p>
+									<ul class="contact">
+										<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+										<li class="icon solid fa-phone">(000) 000-0000</li>
+										<li class="icon solid fa-home">1234 Somewhere Road #8254<br />
+										Nashville, TN 00000-0000</li>
+									</ul>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright"> &copy; Hbaf & Co. All rights reserved.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+			<script src="{{url_for('static',filename='js/browser.min.js')}}"></script>
+			<script src="{{url_for('static',filename='js/breakpoints.min.js')}}"></script>
+			<script src="{{url_for('static',filename='js/util.js')}}"></script>
+			<script src="{{url_for('static',filename='js/main.js')}}"></script>
+
+	</body>
+</html>

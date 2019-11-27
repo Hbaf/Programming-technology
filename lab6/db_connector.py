@@ -127,7 +127,8 @@ def remove_feed(feed_id):
     cursor.execute(sql)
     db.commit()
     db.close()
-    remove_posts_by_feed_id(feed_id)
+    return remove_posts_by_feed_id(feed_id)
+
 
 
 def get_feeds():
@@ -164,10 +165,11 @@ def add_row(table, *values):
 def remove_posts_by_feed_id(feed_id):
     db = sqlite3.connect(DB_NAME)
     cursor = db.cursor()
-    sql = "DELETE FROM Post WHERE rowid = '{}'".format(feed_id)
+    sql = "DELETE FROM Post WHERE feed_id = '{}'".format(feed_id)
     cursor.execute(sql)
     db.commit()
     db.close()
+    return True
 
 
 def convert_date(date):

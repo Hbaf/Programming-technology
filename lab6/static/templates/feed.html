@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>My RSS reader</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}" />
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+							<!-- Header -->
+								<header id="header" style="align-items: center;  justify-content: flex-start; flex-basis: content">
+									{% if current_feed[4] %}
+									<div style=" flex-grow: 0">
+										<img src="{{current_feed[4]}}" class="logo-pic image">
+									</div>
+									{% endif %}
+									<div style="flex:0 1 content" class="logo" id="{{current_feed[0]}}"><h2>{{current_feed[2]}} by <a target="_blank" href="http://{{current_feed[1]}}"><i>{{current_feed[1]}}</i></a></h2></div>
+								</header>
+							<!-- Content -->
+								<section id="articles">
+                                    {% for article in articles %}
+                                    <!-- Article -->
+                                    <article>
+										<header class="main">
+											<a target="_blank" href="{{article[2]}}"><h2>{{article[1] | safe}}</h2></a>
+										</header>
+										<div class="row">
+											{% if article[4] %}
+											<div class="col-2 col-12-medium">
+												<p><b>{{article[4]}}</b></p>
+											</div>
+											{% endif %}
+											<div class="col-4 col-12-medium">
+												<p>{{article[3]}}</p>
+											</div>
+										</div>
+										{{article[6] | safe}}
+										<div class="col-4 col-12-medium">
+											<p>
+												{% for tag in article[5] %}
+												{% if tag != '' %}
+													<div class="tag"><b>{{tag}}</b></div>
+												{% endif %}
+												{% endfor %}
+											</p>
+										</div>
+									</article>
+                                    <hr class="major" />
+                                    {% endfor %}
+								</section>
+								<div id="page-nav">
+									<lu class="pagination">
+										{% for i in range(1, pages + 1)%}
+										<li class="page-link"><button class="page small" onclick="change_page.bind(this, {{i}})()">{{i}}</button></li>
+										{% endfor %}
+									</lu>
+								</div>
+
+						</div>
+					</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+                            <section id="new-feed" class="alt">
+                               <div class="row" style="align-items: center;  justify-content: flex-start; flex-basis: content">
+                                	<input class="col-9 col-12-medium" type="text" name="add feed" id="add-feed" placeholder="Add new feed" />
+									<button class="col-2 col-12-medium button primary icon solid fa-arrow-right" id="add-feed-button" onclick="add_feed()"></button>
+								</div>
+                            </section>
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Current feeds</h2>
+									</header>
+									<ul>
+                                        {% for feed in feeds %}
+										<li id="feed-{{feed[0]}}" class="row" style="align-items: center;">
+											<a class="col-9 col-12-large" href="/feed/{{feed[0]}}">{{feed[1]}}: {{feed[2]}}</a>
+											<button class="col-2 medium icon solid fa-trash" onclick="remove_feed.bind(this, {{feed[0]}})()"></button>
+										</li>
+                                        {% endfor %}
+									</ul>
+								</nav>
+							<!-- Section -->
+								<section>
+									<header class="major">
+										<h2>Get in touch</h2>
+									</header>
+									<p>We represent best RSS readers. Thank You!</p>
+									<p>If you want to contact us</p>
+									<ul class="contact">
+										<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+										<li class="icon solid fa-phone">(000) 000-0000</li>
+										<li class="icon solid fa-home">1234 Somewhere Road #8254<br />
+										Nashville, TN 00000-0000</li>
+									</ul>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright"> &copy; Hbaf & Co. All rights reserved.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+        <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+        <script src="{{url_for('static',filename='js/browser.min.js')}}"></script>
+        <script src="{{url_for('static',filename='js/breakpoints.min.js')}}"></script>
+        <script src="{{url_for('static',filename='js/util.js')}}"></script>
+        <script src="{{url_for('static',filename='js/main.js')}}"></script>
+        <script src="{{url_for('static',filename='js/feed.js')}}"></script>
+
+	</body>
+</html>
